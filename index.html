@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="app/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="app/js/my-app.js"></script>
+</head>
+
+<body ng-app="MyApp">
+    <div ng-controller="IndexController" class="container">
+        <form>
+            <div class="row">
+                <div class="col-sm-4 col-md-6">
+                    <div class="form-group">
+                    <label for="meuInputEmail">
+                        <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
+                        E-mail
+                    </label>
+                    <input type="email" 
+                        class="form-control" 
+                        id="meuInputEmail" 
+                        placeholder="Email">
+                    </div>
+                </div>
+                <div class="col-sm-8 col-md-6">
+                    <div class="form-group">
+                    <label for="meuInputPassword">
+                        <i class="fa fa-key" aria-hidden="true"></i>
+                        Senha
+                    </label>
+                    <input type="password" 
+                        class="form-control" 
+                        id="meuInputPassword" 
+                        placeholder="Senha">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-user-circle"></i>
+                    Entrar
+                </button>
+                </div>
+            </div>
+        </form>
+
+        <br><br>
+
+        <table class="table">
+            <tr>
+                <th>Nome</th>
+                <th>Data de nascimento</th>
+            </tr>
+            <tr ng-repeat="cliente in clientes">
+                <td ng-bind="cliente.nome"></td>
+                <td ng-bind="cliente.nascimento"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

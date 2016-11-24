@@ -1,0 +1,13 @@
+{
+  "name": "Curso Angular",
+  "description": "Meu primeiro curso de angular",
+  "main": "index.html",
+  "authors": [
+    "Cristiano Borges"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0"
+  }
+}
