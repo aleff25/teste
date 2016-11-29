@@ -13,14 +13,13 @@
                 provider: '=',
                 add: '&'
             },
-            controller: controller,
+            controller: DirectiveController,
             controllerAs: 'vm',
             bindToController: true,
             link: link
         };
 
-        function controller() {
-            /* jshint validthis: true */
+        function DirectiveController() {
             var vm = this;
 
             // console.log(vm);
