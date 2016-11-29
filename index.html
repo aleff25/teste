@@ -8,25 +8,80 @@
     <link href="app/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/angular-growl-v2/build/angular-growl.min.css">
 
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-growl-v2/build/angular-growl.min.js"></script>
+
+    <script src="app/js/directives/input-text/senai-input-text.js"></script>
+    <script src="app/js/directives/uppercase-parser/senai-uppercase-parser.js"></script>
+
     <script src="app/js/my-app.js"></script>
+    <script src="app/js/directives/controller-example/senai-controller-example.js"></script>
+    <script src="app/js/services/alert-service.js"></script>
+    <script src="app/js/services/security-service.js"></script>
+    <script src="app/js/filtros/reverse-filter.js"></script>
+
+    <script src="app/js/index-controller.js"></script>
+    <script src="app/js/meu-controller.js"></script>
 </head>
 
 <body ng-app="MyApp">
-    <div ng-controller="IndexController" class="container">
-        <form>
+
+    <div growl></div>
+
+    <div ng-controller="IndexController as indexCtrl" class="container">
+
+        <!--<script type="text/ng-template" id="mensagens-erro">
+            <p ng-message="minlength">Nome muito pequeno</p>
+            <p ng-message="maxlength">Nome muito grande</p>
+            <p ng-message="required">Campo obrigatório</p>
+        </script>-->
+        
+        <h1>Formulário de login</h1>
+
+        <senai-controller-example provider="listaClientes" add="addCliente()"></senai-controller-example>
+
+        <form name="loginForm" novalidate ng-submit="indexCtrl.doLogin($event)">
+            {{mensagemLogin}}
             <div class="row">
-                <div class="col-sm-4 col-md-6">
-                    <div class="form-group">
-                    <label for="meuInputEmail">
+                <senai-input-text ng-model="user.login"
+                    ng-required="true"
+                    colspan-sm="4"
+                    colspan-md="6"
+                    minlength="3"
+                    maxlength="20"
+                    placeholder="Login"
+                    on-change="indexCtrl.atualizarMensagemLogin(value)">
+
+                    <senai-input-label>
                         <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
-                        E-mail
-                    </label>
-                    <input type="email" 
-                        class="form-control" 
-                        id="meuInputEmail" 
-                        placeholder="Email">
+                        Login
+                    </senai-input-label>
+
+                </senai-input-text>
+
+                <div class="col-sm-4 col-md-6">
+                    {{user.login}}
+                    <div class="form-group" 
+                        ng-class="{'has-error': loginForm.login.$dirty}">
+                        <label for="meuInputEmail">
+                            <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
+                            Login
+                        </label>
+                        <input type="text" 
+                            class="form-control" 
+                            id="meuInputEmail"
+                            name="login" 
+                            placeholder="Login"
+                            ng-model="user.login"
+                            ng-minlength="3"
+                            senai-uppercase-parser
+                            required>
+                        <div class="help-block" ng-messages="loginForm.login.$error">
+                            <div ng-messages-include="app/templates/mensagens-erro.html"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-8 col-md-6">
@@ -38,7 +93,10 @@
                     <input type="password" 
                         class="form-control" 
                         id="meuInputPassword" 
-                        placeholder="Senha">
+                        name="password"
+                        placeholder="Senha"
+                        ng-model="user.password"
+                        required>
                     </div>
                 </div>
             </div>
@@ -60,11 +118,20 @@
                 <th>Nome</th>
                 <th>Data de nascimento</th>
             </tr>
-            <tr ng-repeat="cliente in clientes">
-                <td ng-bind="cliente.nome"></td>
-                <td ng-bind="cliente.nascimento"></td>
+            <tr ng-repeat="cliente in indexCtrl.clientes">
+                <td ng-bind="cliente.nome | reverse"></td>
+                <td ng-bind="cliente.nascimento | date : 'dd/MM/yyyy'"></td>
             </tr>
         </table>
+
+        <div ng-controller="MeuController as meuCtrl">
+            <br>
+            <br>
+            {{indexCtrl.variavelTeste}}
+            {{meuCtrl.variavelTeste}}
+            <h1 data-ng-bind="meuCtrl.nomePagina"></h1>
+            <span data-ng-bind="meuCtrl.getLoggedUser().login"></span>
+        </div>
     </div>
 </body>
 

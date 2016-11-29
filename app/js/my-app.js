@@ -1,27 +1,17 @@
-angular.module('MyApp', [])
-    .controller('IndexController', IndexController);
+angular.module('MyApp', [
+    'ngMessages', 
+    'angular-growl', 
+    'SenaiUppercaseParserDirective',
+    'SenaiInputTextDirective'])
+    .constant('TTL_WARNING', 6000)
+    .value('MeuValor', 200)
+    .config(config);
 
-/* @Inject */
-function IndexController($scope, $timeout) {
-    $scope.clientes = [
-        { nome: 'Maria', nascimento: new Date(1990, 9, 13) },
-        { nome: 'André', nascimento: new Date(1987, 0, 10) }
-    ];
-
-    $scope.listaEmails = [
-        'teste@email.com',
-        'asdf@gmail.com'
-    ];
-
-    $scope.$watch('listaEmails', watchCollectionListaEmails);
-
-    function watchCollectionListaEmails(novoValor) {
-        console.log('Mudou a lista de e-mails.' + novoValor);
-    }
-
-    $scope.$watch('pessoa', watchPessoa, true);
-
-    function watchPessoa(pessoa) {
-        console.log(pessoa.nome);
-    }
+function config(growlProvider, TTL_WARNING) {
+    growlProvider.globalTimeToLive({
+        success: 1000,
+        warning: TTL_WARNING,
+        error: -1,
+        info: 4000
+    });
 }
