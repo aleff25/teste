@@ -39,8 +39,17 @@
             }
         }
 
-        function link(scope, iElement, iAttrs) {
-            console.log('Lista de clientes: ' + scope.$parent.listaClientes[0].name);
+        function link(scope, iElement, iAttrs, ctrl) {
+            scope.$on('alterarListaClientes', 
+                onAlterarListaClientes);
+
+            function onAlterarListaClientes() {
+                ctrl.addItem();
+            }
+
+            scope.$emit('senaiControllerExampleIniciado');
+
+            // console.log('Lista de clientes: ' + scope.$parent.listaClientes[0].name);
         //     var items = angular.copy(scope.provider);
 
         //     init();

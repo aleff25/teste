@@ -1,8 +1,15 @@
 angular.module('MyApp')
     .controller('IndexController', IndexController);
 
-/* @Inject */
-function IndexController($rootScope, $scope, $timeout, $filter, SenaiSecurityService) {
+/* @ngInject */
+function IndexController($rootScope, $scope, $timeout, $filter, SenaiSecurityService, _, PessoaService, $log) {
+    
+    $log.debug(PessoaService.obterListaPessoas()[0]);
+
+    $log.debug('Isto não deveria estar acontecendo!');
+
+    $log.debug(_.join(['a', 'b', 'c'], '-'));
+    
     var vm = this;
 
     vm.variavelTeste = 'IndexController';
@@ -16,8 +23,18 @@ function IndexController($rootScope, $scope, $timeout, $filter, SenaiSecuritySer
     ];
 
     $scope.addCliente = function() {
-        console.log('function add');
-    };
+        $log.info('function add');
+    };  
+
+    $timeout(function() {
+        $scope.$broadcast('alterarListaClientes');
+    }, 10000);
+
+    $scope.$on('senaiControllerExampleIniciado', onSenaiControllerExampleIniciado);
+
+    function onSenaiControllerExampleIniciado() {
+        $log.debug('Diretiva senai-controller-example iniciada!');
+    }
 
     $scope.user = {
         login: 'usuario'
@@ -40,7 +57,7 @@ function IndexController($rootScope, $scope, $timeout, $filter, SenaiSecuritySer
 
     var filtroData = $filter('date');
 
-    console.log(
+    $log.debug(
         filtroData(vm.clientes[0].nascimento,
             'dd/MM/yyyy'));
 
@@ -59,7 +76,7 @@ function IndexController($rootScope, $scope, $timeout, $filter, SenaiSecuritySer
 
     function watchPessoa(pessoa) {
         if (pessoa) {
-            console.log(pessoa.nome);
+            $log.debug(pessoa.nome);
         }
     }
 }
