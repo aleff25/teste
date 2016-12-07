@@ -2,7 +2,7 @@
 <html lang="pt-br">
 
 <head>
-    <title></title>
+    <title>Curso HTML5 CSS3 AngularJS</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="app/css/curso-angular.css" rel="stylesheet">
@@ -13,29 +13,69 @@
     <script src="bower_components/lodash/lodash.js"></script>
 
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-growl-v2/build/angular-growl.min.js"></script>
 
     <script src="app/js/directives/input-text/senai-input-text.js"></script>
     <script src="app/js/directives/uppercase-parser/senai-uppercase-parser.js"></script>
+    <script src="app/js/directives/grid/senai-grid.js"></script>
 
     <script src="app/js/my-app.js"></script>
+    
     <script src="app/js/services/lodash-service.js"></script>
-    <script src="app/js/directives/controller-example/senai-controller-example.js"></script>
     <script src="app/js/services/pessoa-service.js"></script>
     <script src="app/js/services/alert-service.js"></script>
     <script src="app/js/services/security-service.js"></script>
+    <script src="app/js/services/data-service.js"></script>
     <script src="app/js/filtros/reverse-filter.js"></script>
+
+    <script src="app/js/directives/repeat/senai-repeat.js"></script>
+    <script src="app/js/directives/component-hello-world/senai-component-hello-world.js"></script>
+    <script src="app/js/directives/controller-example/senai-controller-example.js"></script>
+    <script src="app/js/directives/unique-key/senai-unique-key.js"></script>
 
     <script src="app/js/index-controller.js"></script>
     <script src="app/js/meu-controller.js"></script>
+    <script src="app/js/controllers/clientes-controller.js"></script>
+    <script src="app/js/controllers/cadastro-clientes-controller.js"></script>
+    <script src="app/js/controllers/produtos-controller.js"></script>
 </head>
 
 <body ng-app="MyApp">
 
     <div growl></div>
 
+    <br>
+
+    <senai-controller-example provider="[]"></senai-controller-example>
+
     <div ng-controller="IndexController as indexCtrl" class="container">
+
+        <pre>Path ($location.url()) = {{$location.url()}}</pre>
+        <pre>Template ($route.current.templateUrl) = {{$route.current.templateUrl}}</pre>
+        <pre>Controlador ($route.current.controller) = {{$route.current.controller}}</pre>
+        <pre>Título da Página ($route.current.scope.clientesCtrl.titulo) = {{$route.current.scope.clientesCtrl.titulo}}</pre>
+        <pre>Título da Página ($route.current.scope.produtosCtrl.titulo) = {{$route.current.scope.produtosCtrl.titulo}}</pre>
+        <pre>Parâmetros da URL ($routeParams) = {{$routeParams}}</pre>
+
+        <button class="btn btn-default" ng-click="$location.url('/clientes')">Ir para Clientes</button>
+        <button class="btn btn-default" ng-click="$location.url('/produtos')">Ir para Produtos</button>
+
+        <div ng-view></div>
+
+        <br><br><br><br><hr>
+
+        <div>
+            <div senai-repeat="cliente in indexCtrl.clientes">
+                Teste {{cliente.nome}}
+            </div>
+        </div>
+
+        <senai-component-hello-world 
+            title="Lista de Produtos"
+            subtitle="subtituloListaProdutos">
+        </senai-component-hello-world>
 
         <!--<script type="text/ng-template" id="mensagens-erro">
             <p ng-message="minlength">Nome muito pequeno</p>
@@ -54,8 +94,8 @@
                     ng-required="true"
                     colspan-sm="4"
                     colspan-md="6"
-                    minlength="3"
-                    maxlength="20"
+                    min="3"
+                    max="20"
                     placeholder="Login"
                     on-change="indexCtrl.atualizarMensagemLogin(value)">
 
@@ -66,7 +106,7 @@
 
                 </senai-input-text>
 
-                <div class="col-sm-4 col-md-6">
+                <!--<div class="col-sm-4 col-md-6">
                     {{user.login}}
                     <div class="form-group" 
                         ng-class="{'has-error': loginForm.login.$dirty}">
@@ -87,7 +127,7 @@
                             <div ng-messages-include="app/templates/mensagens-erro.html"></div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="col-sm-8 col-md-6">
                     <div class="form-group">
                     <label for="meuInputPassword">
@@ -107,10 +147,49 @@
             
             <div class="row">
                 <div class="col-xs-12">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-user-circle"></i>
-                    Entrar
-                </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-user-circle"></i>
+                        Entrar
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <button type="button" class="btn btn-default" ng-click="indexCtrl.concluirLogin()">
+            Concluir login
+        </button>
+
+        <form name="cadastroUsuario" novalidate>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="nomeUsuario">
+                        Nome
+                    </label>
+                    <input type="text" 
+                        name="nomeUsuario"
+                        class="form-control"
+                        placeholder="Nome do usuário"
+                        data-ng-model="indexCtrl.novoUsuario.nome"
+                        required>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="emailUsuario">
+                        E-mail
+                    </label>
+                    <input type="email" 
+                        name="emailUsuario"
+                        class="form-control"
+                        placeholder="E-mail do usuário"
+                        data-ng-model="indexCtrl.novoUsuario.email"
+                        data-ng-model-options="{ updateOn: 'blur' }"
+                        senai-unique-key
+                        senai-unique-key-property="pessoa.email"
+                        required>
+                    <div class="help-block" ng-messages="cadastroUsuario.emailUsuario.$error">
+                        <div ng-messages-include="app/templates/mensagens-erro.html"></div>
+                    </div>
                 </div>
             </div>
         </form>

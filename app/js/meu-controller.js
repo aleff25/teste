@@ -23,7 +23,8 @@
          }
 
         function getLoggedUser() {
-            return SenaiSecurityService.getLoggedUser();
+//            return SenaiSecurityService.getLoggedUser();
+            return null;
         }
     }
 })();

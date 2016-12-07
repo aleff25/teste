@@ -2,52 +2,66 @@
     'use strict';
 
     angular.module('MyApp')
-        .directive('senaiControllerExample', senaiControllerExample);
-
-    function senaiControllerExample() {
-        return {
-            restrict: 'EA',
-            template: '<button ng-click="vm.addItem()">Add Item</button>' +
-            '<ul><li ng-repeat="item in vm.items" ng-bind="item.name"></li></ul>',
-            scope: {
-                provider: '=',
+        .component('senaiControllerExample', {
+            template: 
+                '<button ng-click="$ctrl.onClick()">Add Item</button>' +
+                '<ul><li ng-repeat="item in $ctrl.provider" ng-bind="item.name"></li></ul>',
+            bindings: {
+                provider: '<',
                 add: '&'
             },
             controller: DirectiveController,
-            controllerAs: 'vm',
-            bindToController: true,
-            link: link
-        };
+            //,
+            // link: link
+    });
 
-        function DirectiveController() {
-            var vm = this;
+    function DirectiveController($scope) {
+        var vm = this;
+        var desregistrarEventoAlterarListaClientes;
 
-            // console.log(vm);
+        // console.log(vm);
 
-            vm.addItem = addItem;
+        vm.$onInit = $onInit;
+        vm.onClick = onClick;
+        vm.addItem = addItem;
 
-            init();
+        function $onInit() {
+            // vm.items = angular.copy(vm.provider);
+            desregistrarEventoAlterarListaClientes = 
+                $scope.$on('alterarListaClientes', onAlterarListaClientes);
 
-            function init() {
-                vm.items = angular.copy(vm.provider);
-            }
-
-            function addItem() {
-                vm.add();
-
-                vm.items.push({ name: 'Novo Cliente' });
-            }
+            $scope.$emit('senaiControllerExampleIniciado');
         }
 
-        function link(scope, iElement, iAttrs, ctrl) {
-            scope.$on('alterarListaClientes', 
-                onAlterarListaClientes);
+        function onClick() {
+            desregistrarEventoAlterarListaClientes();
+            vm.addItem();
+        }
 
-            function onAlterarListaClientes() {
-                ctrl.addItem();
-            }
+        function addItem() {
+            vm.add();
+            vm.provider.push({ name: 'Novo Cliente' });
+        }
 
-            scope.$emit('senaiControllerExampleIniciado');
+        function onAlterarListaClientes() {
+            vm.addItem();
+        }
+    }
+
+        // function link(scope, iElement, iAttrs) {
+        //     var desregistrarEventoAlterarListaClientes = 
+        //         scope.$on('alterarListaClientes', onAlterarListaClientes);
+
+        //     scope.vm.onClick = function() {
+        //         desregistrarEventoAlterarListaClientes();
+        //         scope.vm.addItem();
+        //     };
+
+        //     function onAlterarListaClientes() {
+        //         scope.vm.addItem();
+        //     }
+
+        //     scope.$emit('senaiControllerExampleIniciado');
 
             // console.log('Lista de clientes: ' + scope.$parent.listaClientes[0].name);
         //     var items = angular.copy(scope.provider);
@@ -84,6 +98,6 @@
 
         //         iElement.find('div').html(listHtml);
         //     }
-        }
-    }
+        // }
+//     }
 })();

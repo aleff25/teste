@@ -1,21 +1,28 @@
 angular.module('MyApp')
     .service('SenaiSecurityService', SenaiSecurityService);
 
-function SenaiSecurityService($timeout, SenaiAlertService) {
+function SenaiSecurityService($timeout, SenaiAlertService, $q, $rootScope) {
     var loggedUser = null;
 
     this.doLogin = doLogin;
     this.getLoggedUser = getLoggedUser;
 
     function doLogin(user) {
-        if (user.login === 'usuario' && user.password === '1234') {
-            $timeout(function () {
+        var deferred = $q.defer();
+
+        var unsubscribeEventoConcluirLogin = 
+        $rootScope.$on('concluirLogin', function(event, loginCorreto) {
+            unsubscribeEventoConcluirLogin();
+
+            if (loginCorreto) {
                 loggedUser = user;
-                SenaiAlertService.showOk('Login realizado com sucesso!');
-            }, 3000);
-        } else {
-            SenaiAlertService.showError('Acesso negado!');
-        }
+                deferred.resolve();
+            } else {
+                deferred.reject();
+            }
+        });
+
+        return deferred.promise;
     }
 
     function getLoggedUser() {
