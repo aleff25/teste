@@ -4,7 +4,8 @@ angular.module('MyApp', [
     'SenaiUppercaseParserDirective',
     'SenaiInputTextDirective',
     'ngRoute',
-    'SenaiGridModule'])
+    'senaiGridModule',
+    'unsafeFilter'])
     .constant('TTL_WARNING', 6000)
     .value('meuValor', 200)
     .config(config)

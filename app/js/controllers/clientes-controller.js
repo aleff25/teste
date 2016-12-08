@@ -5,8 +5,8 @@
         .module('MyApp')
         .controller('ClientesController', ClientesController);
 
-    ClientesController.$inject = ['$sce'];
-    function ClientesController($sce) {
+    ClientesController.$inject = ['$scope', '$log'];
+    function ClientesController($scope, $log) {
         var vm = this;
 
         vm.titulo = 'Lista de Clientes';
@@ -25,15 +25,40 @@
             }
         ];
         vm.gridColumns = [
-            { property: 'id', description: $sce.trustAsHtml('<i>Código</i>') },
-            { property: 'pessoa.nome', description: $sce.trustAsHtml('Nome') },
-            { property: 'pessoa.dataNascimento', description: $sce.trustAsHtml('Data de Nascimento') }
+            {
+                property: 'id',
+                description: '<em>Código</em>',
+                width: '80px'
+            },
+            {
+                property: 'pessoa.nome',
+                description: 'Nome',
+                width: '150px'
+            },
+            {
+                property: 'pessoa.dataNascimento',
+                description: 'Data de Nascimento',
+                labelFilter: 'date',
+                labelFilterArguments: ['dd/MM/yyyy Z', '+0300']
+            }
         ];
 
         activate();
 
         ////////////////
 
-        function activate() { }
+        function activate() {
+            $scope.$on('senaiGrid:sort', onSenaiGridSort);
+            $scope.$on('senaiGrid:remove', onSenaiGridRemove);
+        }
+
+        function onSenaiGridSort(event, column) {
+            $log.debug('Coluna: ' + column.property +
+                ' - Ordenação: ' + column.sortOrder);
+        }
+
+        function onSenaiGridRemove(event, gridData) {
+            vm.listaClientes.splice(gridData.rowIndex, 1);
+        }
     }
 })();

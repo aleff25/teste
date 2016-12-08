@@ -1,5 +1,5 @@
-(function() {
-'use strict';
+(function () {
+    'use strict';
 
     // Usage:
     // 
@@ -7,7 +7,7 @@
     // 
 
     angular
-        .module('SenaiGridModule', [])
+        .module('senaiGridModule', ['unsafeFilter'])
         .component('senaiGrid', {
             templateUrl: 'app/js/directives/grid/senai-grid.html',
             transclude: true,
@@ -23,10 +23,10 @@
             }
         });
 
-    GridController.$inject = ['$parse', '$scope'];
-    function GridController($parse, $scope) {
+    GridController.$inject = ['$parse', '$scope', '$filter', '$attrs'];
+    function GridController($parse, $scope, $filter, $attrs) {
         var $ctrl = this;
-        
+
         $ctrl.selectedRowIndex = -1;
 
         $ctrl.addColumn = addColumn;
@@ -35,10 +35,11 @@
         $ctrl.edit = edit;
         $ctrl.remove = remove;
         $ctrl.sort = sort;
+        $ctrl.getRowClass = getRowClass;
 
         var _currentSortedColumn = null;
 
-        $ctrl.$onInit = function() {
+        $ctrl.$onInit = function () {
             // $ctrl.columns = [];
         };
 
@@ -47,16 +48,24 @@
         }
 
         function getValue(item, column) {
+            /* jshint validthis: true */
             var value = column.property ? $parse(column.property)(item) : null;
 
-            return value;
+            if (column.labelFilter) {
+                var filterArguments = angular.extend([], column.labelFilterArguments);
+                filterArguments.unshift(value);
+                return $filter(column.labelFilter).apply(this, filterArguments);
+                // return $filter('date')(value, 'dd/MM/yyyy');
+            } else {
+                return value;
+            }
         }
 
         function selectRow(rowIndex) {
             if ($ctrl.enableSelection) {
                 $ctrl.selectedRowIndex = rowIndex;
 
-                $scope.$emit('senaiGrid:select', {
+                $scope.$emit('senaiGrid:select' + $attrs.id, {
                     rowIndex: rowIndex,
                     item: $ctrl.provider[rowIndex]
                 });
@@ -99,6 +108,10 @@
 
                 $scope.$emit('senaiGrid:sort', _currentSortedColumn);
             }
+        }
+
+        function getRowClass(index) {
+            return $ctrl.selectedRowIndex === index ? $ctrl.rowClass : '';
         }
     }
 })();
