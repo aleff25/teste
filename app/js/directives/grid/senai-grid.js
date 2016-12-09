@@ -7,14 +7,13 @@
     // 
 
     angular
-        .module('senaiGridModule', ['unsafeFilter'])
+        .module('senaiGridModule')
         .component('senaiGrid', {
             templateUrl: 'app/js/directives/grid/senai-grid.html',
             transclude: true,
             controller: GridController,
             bindings: {
                 provider: '<',
-                columns: '=',
                 disableRemove: '<',
                 disableEdit: '<',
                 disableSort: '<',
@@ -27,8 +26,6 @@
     function GridController($parse, $scope, $filter, $attrs) {
         var $ctrl = this;
 
-        $ctrl.selectedRowIndex = -1;
-
         $ctrl.addColumn = addColumn;
         $ctrl.getValue = getValue;
         $ctrl.selectRow = selectRow;
@@ -40,7 +37,8 @@
         var _currentSortedColumn = null;
 
         $ctrl.$onInit = function () {
-            // $ctrl.columns = [];
+            $ctrl.selectedRowIndex = -1;
+            $ctrl.columns = [];
         };
 
         function addColumn(column) {

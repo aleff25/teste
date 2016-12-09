@@ -12,7 +12,11 @@
         vm.titulo = 'Lista de Clientes';
         vm.listaClientes = [
             {
-                id: 1, pessoa: { nome: 'Fulano', dataNascimento: new Date(1985, 3, 23) }
+                id: 1, 
+                pessoa: { 
+                    nome: 'Fulano', 
+                    dataNascimento: moment({ year: 1985, month: 2, day: 5}).subtract({month: 5}).toDate() 
+                }
             },
             {
                 id: 2, pessoa: { nome: 'Beltrano', dataNascimento: new Date(1986, 3, 10) }
@@ -22,24 +26,6 @@
             },
             {
                 id: 4, pessoa: { nome: 'Teste', dataNascimento: new Date(1988, 8, 16) }
-            }
-        ];
-        vm.gridColumns = [
-            {
-                property: 'id',
-                description: '<em>Código</em>',
-                width: '80px'
-            },
-            {
-                property: 'pessoa.nome',
-                description: 'Nome',
-                width: '150px'
-            },
-            {
-                property: 'pessoa.dataNascimento',
-                description: 'Data de Nascimento',
-                labelFilter: 'date',
-                labelFilterArguments: ['dd/MM/yyyy Z', '+0300']
             }
         ];
 

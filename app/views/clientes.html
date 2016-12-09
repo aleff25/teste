@@ -3,9 +3,20 @@ Página de clientes aqui
 
 <senai-grid id="gridClientes"
     provider="clientesCtrl.listaClientes" 
-    columns="clientesCtrl.gridColumns"
     disable-edit="true"
     enable-selection="true"
     row-class="info">
+
+    <senai-grid-column property="id" width="80px">
+        <em>Código</em>
+    </senai-grid-column>
+
+    <senai-grid-column property="pessoa.nome" width="150px">
+        Nome
+    </senai-grid-column>
+
+    <senai-grid-column property="pessoa.dataNascimento" label-filter="date" label-filter-arguments="['dd/MM/yyyy']">
+        Data de Nascimento
+    </senai-grid-column>
 
 </senai-grid>
